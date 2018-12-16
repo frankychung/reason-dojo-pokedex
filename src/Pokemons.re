@@ -81,6 +81,22 @@ let decode = response => {
     );
 };
 
+let loadMore = (endCursor, self) => {
+    Js.log(endCursor);
+    Query.make(~after=endCursor, ())
+      -> Api.sendQuery
+      |> Js.Promise.then_(
+        result => {
+          switch result {
+            | Result.Ok(response) => self.ReasonReact.send(SetError("Ok"))
+            | Result.Error(error) => self.ReasonReact.send(SetError(error))
+          }
+          Js.Promise.resolve()
+        }
+      )
+      |> ignore
+};
+  
 let make = _children => {
   ...component,
   initialState: () => Loading,
@@ -114,7 +130,7 @@ let make = _children => {
       let pokemons =
         data.pokemons
         ->List.map(pokemon =>
-            <div>
+            <div key={string_of_int(pokemon.id)}>
               <Link to_={"/" ++ pokemon.identifier}>
                 ...{ReasonReact.string(pokemon.englishName)}
               </Link>
@@ -123,6 +139,7 @@ let make = _children => {
         ->List.toArray;
       <div>
         <div> {ReasonReact.array(pokemons)} </div>
+        <button onClick={_ => self.handle(loadMore, data.endCursor)}> {ReasonReact.string("Load More")}</button>
       </div>;
     },
 };

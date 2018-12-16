@@ -299,6 +299,19 @@ function decode(response) {
   }
 }
 
+function loadMore(endCursor, self) {
+  console.log(endCursor);
+  Api$ReasonDojoPokedex.sendQuery(make(undefined, endCursor, undefined, /* () */0)).then((function (result) {
+          if (result.tag) {
+            Curry._1(self[/* send */3], /* SetError */Block.__(1, [result[0]]));
+          } else {
+            Curry._1(self[/* send */3], /* SetError */Block.__(1, ["Ok"]));
+          }
+          return Promise.resolve(/* () */0);
+        }));
+  return /* () */0;
+}
+
 function make$1(_children) {
   return /* record */[
           /* debugName */component[/* debugName */0],
@@ -330,10 +343,17 @@ function make$1(_children) {
               if (typeof match === "number") {
                 return React.createElement("div", undefined, "Loading...");
               } else if (match.tag) {
-                var pokemons = Belt_List.toArray(Belt_List.map(match[0][/* pokemons */2], (function (pokemon) {
-                            return React.createElement("div", undefined, ReasonReact.element(undefined, undefined, Link$ReasonDojoPokedex.make("/" + pokemon[/* identifier */0], pokemon[/* englishName */2])));
+                var data = match[0];
+                var pokemons = Belt_List.toArray(Belt_List.map(data[/* pokemons */2], (function (pokemon) {
+                            return React.createElement("div", {
+                                        key: String(pokemon[/* id */1])
+                                      }, ReasonReact.element(undefined, undefined, Link$ReasonDojoPokedex.make("/" + pokemon[/* identifier */0], pokemon[/* englishName */2])));
                           })));
-                return React.createElement("div", undefined, React.createElement("div", undefined, pokemons));
+                return React.createElement("div", undefined, React.createElement("div", undefined, pokemons), React.createElement("button", {
+                                onClick: (function (param) {
+                                    return Curry._2(self[/* handle */0], loadMore, data[/* endCursor */1]);
+                                  })
+                              }, "Load More"));
               } else {
                 return React.createElement("div", undefined, match[0]);
               }
@@ -356,5 +376,6 @@ function make$1(_children) {
 exports.Query = Query;
 exports.component = component;
 exports.decode = decode;
+exports.loadMore = loadMore;
 exports.make = make$1;
 /* component Not a pure module */
