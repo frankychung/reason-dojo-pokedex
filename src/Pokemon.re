@@ -3,12 +3,33 @@ open Belt;
 module Query = [%graphql
   {|
 query getPokemon($id: Int) {
-  pokemon: Pokemon(filter: {id: $id}) {
+  pokemon: PokemonSpecies(filter: {id: $id} ){
     edges {
       node {
-        id
-        englishName
-        identifier
+        color {
+          identifier
+        }
+        pokemons {
+          id
+          englishName
+          sprites {
+            normal {
+              male {
+                front
+                back
+              }
+            }
+          }
+        }
+        evolutionChain {
+          pokemonSpecies {
+            id
+            pokemons {
+              id
+              englishName
+            }
+          }
+        }
       }
     }
   }
@@ -17,28 +38,39 @@ query getPokemon($id: Int) {
 ];
 
 type pokemon = {
-  identifier: string,
   id: int,
   englishName: string,
 };
 
-let decode = response => {
+let filter = (id, pokemon) => {
+  let id2 = Option.map([%get_in pokemon#??id], int_of_string);
+  Option.eq(Some(id), id2, (==));
+};
+
+let decode = (id, response) => {
   let edges = [%get_in response##pokemon#??edges];
   let pokemons =
     switch (edges) {
     | Some(edges) =>
       edges
       ->Array.map(edge => {
-          let identifier = [%get_in edge#??node#??identifier];
-          let id = [%get_in edge#??node#??id];
-          let englishName = [%get_in edge#??node#??englishName];
-          identifier->Option.flatMap(identifier =>
-            id->Option.flatMap(id =>
-              englishName->Option.flatMap(englishName =>
-                Some({identifier, id: int_of_string(id), englishName})
-              )
-            )
-          );
+          let pokemons = [%get_in edge#??node#??pokemons];
+          switch (pokemons) {
+          | Some(pokemons) =>
+            let pokemons = Array.keep(pokemons, filter(id));
+            switch (pokemons) {
+            | [|pokemon|] =>
+              let pid = Option.map([%get_in pokemon#??id], int_of_string);
+              let englishName = [%get_in pokemon#??englishName];
+              pid->Option.flatMap(id =>
+                englishName->Option.flatMap(englishName =>
+                  Some({id, englishName})
+                )
+              );
+            | _ => None
+            };
+          | None => None
+          };
         })
       ->List.fromArray
       ->List.keep(Option.isSome)
@@ -77,7 +109,7 @@ let make = (~id, _children) => {
     |> Js.Promise.then_(r => {
          switch (r) {
          | Result.Ok(response) =>
-           switch (decode(response)) {
+           switch (decode(id, response)) {
            | Result.Ok(data) => self.send(LoadData(data))
            | Result.Error(error) => self.send(SetError(error))
            }

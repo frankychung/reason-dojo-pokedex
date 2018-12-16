@@ -86,32 +86,30 @@ let appendToList = (currentData, newData) => {
   let data: data = {
     totalCount: currentData.totalCount,
     endCursor: newData.endCursor,
-    pokemons: List.concat(currentData.pokemons, newData.pokemons)
-  }
-  data
+    pokemons: List.concat(currentData.pokemons, newData.pokemons),
+  };
+  data;
 };
-
 
 let loadMore = (currentData, self) => {
-    Query.make(~after=currentData.endCursor, ())
-      -> Api.sendQuery
-      |> Js.Promise.then_(
-        result => {
-          switch result {
-            | Result.Ok(response) => {
-              switch (decode(response)) {
-                | Result.Ok(response) => self.ReasonReact.send(LoadData(appendToList(currentData, response)))
-                | Result.Error(error) => self.ReasonReact.send(SetError(error))
-              }
-            }
-            | Result.Error(error) => self.ReasonReact.send(SetError(error))
-          }
-          Js.Promise.resolve()
-        }
-      )
-      |> ignore
+  Query.make(~after=currentData.endCursor, ())->Api.sendQuery
+  |> Js.Promise.then_(result => {
+       switch (result) {
+       | Result.Ok(response) =>
+         switch (decode(response)) {
+         | Result.Ok(response) =>
+           self.ReasonReact.send(
+             LoadData(appendToList(currentData, response)),
+           )
+         | Result.Error(error) => self.ReasonReact.send(SetError(error))
+         }
+       | Result.Error(error) => self.ReasonReact.send(SetError(error))
+       };
+       Js.Promise.resolve();
+     })
+  |> ignore;
 };
-  
+
 let make = _children => {
   ...component,
   initialState: () => Loading,
@@ -146,7 +144,7 @@ let make = _children => {
         data.pokemons
         ->List.map(pokemon =>
             <div key={string_of_int(pokemon.id)}>
-              <Link to_={"/" ++ pokemon.identifier}>
+              <Link to_={"/" ++ string_of_int(pokemon.id)}>
                 ...{ReasonReact.string(pokemon.englishName)}
               </Link>
             </div>
@@ -154,7 +152,9 @@ let make = _children => {
         ->List.toArray;
       <div>
         <div> {ReasonReact.array(pokemons)} </div>
-        <button onClick={_ => self.handle(loadMore, data)}> {ReasonReact.string("Load More")}</button>
+        <button onClick={_ => self.handle(loadMore, data)}>
+          {ReasonReact.string("Load More")}
+        </button>
       </div>;
     },
 };

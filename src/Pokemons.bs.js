@@ -359,7 +359,7 @@ function make$1(_children) {
                 var pokemons = Belt_List.toArray(Belt_List.map(data[/* pokemons */2], (function (pokemon) {
                             return React.createElement("div", {
                                         key: String(pokemon[/* id */1])
-                                      }, ReasonReact.element(undefined, undefined, Link$ReasonDojoPokedex.make("/" + pokemon[/* identifier */0], pokemon[/* englishName */2])));
+                                      }, ReasonReact.element(undefined, undefined, Link$ReasonDojoPokedex.make("/" + String(pokemon[/* id */1]), pokemon[/* englishName */2])));
                           })));
                 return React.createElement("div", undefined, React.createElement("div", undefined, pokemons), React.createElement("button", {
                                 onClick: (function (param) {
