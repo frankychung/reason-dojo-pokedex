@@ -299,12 +299,29 @@ function decode(response) {
   }
 }
 
-function appendToList(self, newData) {
+function appendToList(currentData, newData) {
   return /* record */[
-          /* totalCount */self[/* state */1][/* totalCount */0],
+          /* totalCount */currentData[/* totalCount */0],
           /* endCursor */newData[/* endCursor */1],
-          /* pokemons */Belt_List.concat(self[/* state */1][/* pokemons */2], newData[/* pokemons */2])
+          /* pokemons */Belt_List.concat(currentData[/* pokemons */2], newData[/* pokemons */2])
         ];
+}
+
+function loadMore(currentData, self) {
+  Api$ReasonDojoPokedex.sendQuery(make(undefined, currentData[/* endCursor */1], undefined, /* () */0)).then((function (result) {
+          if (result.tag) {
+            Curry._1(self[/* send */3], /* SetError */Block.__(1, [result[0]]));
+          } else {
+            var match = decode(result[0]);
+            if (match.tag) {
+              Curry._1(self[/* send */3], /* SetError */Block.__(1, [match[0]]));
+            } else {
+              Curry._1(self[/* send */3], /* LoadData */Block.__(0, [appendToList(currentData, match[0])]));
+            }
+          }
+          return Promise.resolve(/* () */0);
+        }));
+  return /* () */0;
 }
 
 function make$1(_children) {
@@ -346,25 +363,7 @@ function make$1(_children) {
                           })));
                 return React.createElement("div", undefined, React.createElement("div", undefined, pokemons), React.createElement("button", {
                                 onClick: (function (param) {
-                                    Api$ReasonDojoPokedex.sendQuery(make(undefined, data[/* endCursor */1], undefined, /* () */0)).then((function (result) {
-                                            if (result.tag) {
-                                              Curry._1(self[/* send */3], /* SetError */Block.__(1, [result[0]]));
-                                            } else {
-                                              var match = decode(result[0]);
-                                              if (match.tag) {
-                                                Curry._1(self[/* send */3], /* SetError */Block.__(1, [match[0]]));
-                                              } else {
-                                                var response = match[0];
-                                                Curry._1(self[/* send */3], /* LoadData */Block.__(0, [/* record */[
-                                                          /* totalCount */response[/* totalCount */0],
-                                                          /* endCursor */response[/* endCursor */1],
-                                                          /* pokemons */Belt_List.concat(data[/* pokemons */2], response[/* pokemons */2])
-                                                        ]]));
-                                              }
-                                            }
-                                            return Promise.resolve(/* () */0);
-                                          }));
-                                    return /* () */0;
+                                    return Curry._2(self[/* handle */0], loadMore, data);
                                   })
                               }, "Load More"));
               } else {
@@ -390,5 +389,6 @@ exports.Query = Query;
 exports.component = component;
 exports.decode = decode;
 exports.appendToList = appendToList;
+exports.loadMore = loadMore;
 exports.make = make$1;
 /* component Not a pure module */
