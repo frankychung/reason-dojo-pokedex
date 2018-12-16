@@ -1,12 +1,12 @@
-type identifier = string;
+type id = int;
 
 type state =
   | List
-  | Single(identifier);
+  | Single(id);
 
 type action =
   | ShowList
-  | ShowSingle(identifier);
+  | ShowSingle(id);
 
 let component = ReasonReact.reducerComponent("App");
 
@@ -25,21 +25,21 @@ let make = _children => {
   ...component,
   initialState: () => {
     switch (ReasonReact.Router.dangerouslyGetInitialUrl().path) {
-    | [identifier] => Single(identifier)
+    | [id] => Single(int_of_string(id))
     | _ => List
     };
   },
   reducer: (action, _state) => {
     switch (action) {
     | ShowList => ReasonReact.Update(List)
-    | ShowSingle(identifier) => ReasonReact.Update(Single(identifier))
+    | ShowSingle(id) => ReasonReact.Update(Single(id))
     };
   },
   didMount: self => {
     let watcherID =
       ReasonReact.Router.watchUrl(url =>
         switch (url.path) {
-        | [identifier] => self.send(ShowSingle(identifier))
+        | [id] => self.send(ShowSingle(int_of_string(id)))
         | _ => self.send(ShowList)
         }
       );
@@ -49,7 +49,7 @@ let make = _children => {
     let content =
       switch (self.state) {
       | List => <Pokemons />
-      | Single(identifier) => <Pokemon identifier />
+      | Single(id) => <Pokemon id />
       };
     <div style> <div> {ReasonReact.string("Pokedex!")} </div> content </div>;
   },

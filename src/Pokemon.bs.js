@@ -16,7 +16,7 @@ var ReasonReact = require("reason-react/src/ReasonReact.js");
 var Api$ReasonDojoPokedex = require("./Api.bs.js");
 var Link$ReasonDojoPokedex = require("./Link.bs.js");
 
-var ppx_printed_query = "query getPokemon($identifier: String)  {\npokemon: Pokemon(filter: {identifier: $identifier})  {\nedges  {\nnode  {\nid  \nenglishName  \nidentifier  \n}\n\n}\n\n}\n\n}\n";
+var ppx_printed_query = "query getPokemon($id: Int)  {\npokemon: Pokemon(filter: {id: $id})  {\nedges  {\nnode  {\nid  \nenglishName  \nidentifier  \n}\n\n}\n\n}\n\n}\n";
 
 function parse(value) {
   var match = Js_json.decodeObject(value);
@@ -148,24 +148,24 @@ function parse(value) {
   }
 }
 
-function make(identifier, param) {
+function make(id, param) {
   return {
           query: ppx_printed_query,
           variables: Js_dict.fromArray(/* array */[/* tuple */[
-                  "identifier",
-                  identifier !== undefined ? identifier : null
+                  "id",
+                  id !== undefined ? id : null
                 ]]),
           parse: parse
         };
 }
 
 function makeWithVariables(variables) {
-  var identifier = variables.identifier;
+  var id = variables.id;
   return {
           query: ppx_printed_query,
           variables: Js_dict.fromArray(/* array */[/* tuple */[
-                  "identifier",
-                  identifier !== undefined ? identifier : null
+                  "id",
+                  id !== undefined ? id : null
                 ]]),
           parse: parse
         };
@@ -218,14 +218,14 @@ function decode(response) {
 
 var component = ReasonReact.reducerComponent("Pokemon");
 
-function make$1(identifier, _children) {
+function make$1(id, _children) {
   return /* record */[
           /* debugName */component[/* debugName */0],
           /* reactClassInternal */component[/* reactClassInternal */1],
           /* handedOffState */component[/* handedOffState */2],
           /* willReceiveProps */component[/* willReceiveProps */3],
           /* didMount */(function (self) {
-              Api$ReasonDojoPokedex.sendQuery(make(identifier, /* () */0)).then((function (r) {
+              Api$ReasonDojoPokedex.sendQuery(make(id, /* () */0)).then((function (r) {
                       if (r.tag) {
                         Curry._1(self[/* send */3], /* SetError */Block.__(1, [r[0]]));
                       } else {

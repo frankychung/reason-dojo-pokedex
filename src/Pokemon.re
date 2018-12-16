@@ -2,8 +2,8 @@ open Belt;
 
 module Query = [%graphql
   {|
-query getPokemon($identifier: String) {
-  pokemon: Pokemon(filter: {identifier: $identifier}) {
+query getPokemon($id: Int) {
+  pokemon: Pokemon(filter: {id: $id}) {
     edges {
       node {
         id
@@ -62,7 +62,7 @@ type action =
 
 let component = ReasonReact.reducerComponent("Pokemon");
 
-let make = (~identifier, _children) => {
+let make = (~id, _children) => {
   ...component,
   initialState: () => Loading,
   reducer: (action, _state) => {
@@ -72,7 +72,7 @@ let make = (~identifier, _children) => {
     };
   },
   didMount: self => {
-    Query.make(~identifier, ())
+    Query.make(~id, ())
     |> Api.sendQuery
     |> Js.Promise.then_(r => {
          switch (r) {

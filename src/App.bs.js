@@ -4,6 +4,7 @@
 var Block = require("bs-platform/lib/js/block.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
+var Caml_format = require("bs-platform/lib/js/caml_format.js");
 var ReasonReact = require("reason-react/src/ReasonReact.js");
 var Pokemon$ReasonDojoPokedex = require("./Pokemon.bs.js");
 var Pokemons$ReasonDojoPokedex = require("./Pokemons.bs.js");
@@ -29,7 +30,7 @@ function make(_children) {
               var watcherID = ReasonReact.Router[/* watchUrl */1]((function (url) {
                       var match = url[/* path */0];
                       if (match && !match[1]) {
-                        return Curry._1(self[/* send */3], /* ShowSingle */[match[0]]);
+                        return Curry._1(self[/* send */3], /* ShowSingle */[Caml_format.caml_int_of_string(match[0])]);
                       } else {
                         return Curry._1(self[/* send */3], /* ShowList */0);
                       }
@@ -52,7 +53,7 @@ function make(_children) {
           /* initialState */(function (param) {
               var match = ReasonReact.Router[/* dangerouslyGetInitialUrl */3](/* () */0)[/* path */0];
               if (match && !match[1]) {
-                return /* Single */[match[0]];
+                return /* Single */[Caml_format.caml_int_of_string(match[0])];
               } else {
                 return /* List */0;
               }
