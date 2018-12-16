@@ -81,6 +81,17 @@ let decode = response => {
     );
 };
 
+let appendToList = (self, newData) => {
+  /* update end cursor, append newData.list to current state.list */
+  let data: data = {
+    totalCount: self.ReasonReact.state.totalCount,
+    endCursor: newData.endCursor,
+    pokemons: List.concat(self.ReasonReact.state.pokemons, newData.pokemons)
+  }
+  data
+};
+
+/*
 let loadMore = (endCursor, self) => {
     Js.log(endCursor);
     Query.make(~after=endCursor, ())
@@ -88,14 +99,19 @@ let loadMore = (endCursor, self) => {
       |> Js.Promise.then_(
         result => {
           switch result {
-            | Result.Ok(response) => self.ReasonReact.send(SetError("Ok"))
+            | Result.Ok(response) => {
+              switch (decode(response)) {
+                | Result.Ok(response) => self.ReasonReact.send(LoadData(appendToList(self, response)))
+                | Result.Error(error) => self.ReasonReact.send(SetError(error))
+              }
+            }
             | Result.Error(error) => self.ReasonReact.send(SetError(error))
           }
           Js.Promise.resolve()
         }
       )
       |> ignore
-};
+}; */
   
 let make = _children => {
   ...component,
@@ -139,7 +155,29 @@ let make = _children => {
         ->List.toArray;
       <div>
         <div> {ReasonReact.array(pokemons)} </div>
-        <button onClick={_ => self.handle(loadMore, data.endCursor)}> {ReasonReact.string("Load More")}</button>
+        <button onClick={_ => {
+          Query.make(~after=data.endCursor, ())
+            -> Api.sendQuery
+            |> Js.Promise.then_(
+              result => {
+                switch result {
+                  | Result.Ok(response) => {
+                    switch (decode(response)) {
+                      | Result.Ok(response) => self.ReasonReact.send(LoadData({
+                          totalCount: response.totalCount,
+                          endCursor: response.endCursor,
+                          pokemons: List.concat(data.pokemons, response.pokemons)
+                        }))
+                      | Result.Error(error) => self.ReasonReact.send(SetError(error))
+                    }
+                  }
+                  | Result.Error(error) => self.ReasonReact.send(SetError(error))
+                }
+                Js.Promise.resolve()
+              }
+            )
+            |> ignore
+        }}> {ReasonReact.string("Load More")}</button>
       </div>;
     },
 };
