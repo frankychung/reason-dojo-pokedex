@@ -6,9 +6,6 @@ query getPokemon($id: Int) {
   pokemon: PokemonSpecies(filter: {id: $id} ){
     edges {
       node {
-        color {
-          identifier
-        }
         pokemons {
           id
           englishName
@@ -16,17 +13,7 @@ query getPokemon($id: Int) {
             normal {
               male {
                 front
-                back
               }
-            }
-          }
-        }
-        evolutionChain {
-          pokemonSpecies {
-            id
-            pokemons {
-              id
-              englishName
             }
           }
         }

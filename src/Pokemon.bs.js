@@ -17,7 +17,7 @@ var ReasonReact = require("reason-react/src/ReasonReact.js");
 var Api$ReasonDojoPokedex = require("./Api.bs.js");
 var Link$ReasonDojoPokedex = require("./Link.bs.js");
 
-var ppx_printed_query = "query getPokemon($id: Int)  {\npokemon: PokemonSpecies(filter: {id: $id})  {\nedges  {\nnode  {\ncolor  {\nidentifier  \n}\n\npokemons  {\nid  \nenglishName  \nsprites  {\nnormal  {\nmale  {\nfront  \nback  \n}\n\n}\n\n}\n\n}\n\nevolutionChain  {\npokemonSpecies  {\nid  \npokemons  {\nid  \nenglishName  \n}\n\n}\n\n}\n\n}\n\n}\n\n}\n\n}\n";
+var ppx_printed_query = "query getPokemon($id: Int)  {\npokemon: PokemonSpecies(filter: {id: $id})  {\nedges  {\nnode  {\npokemons  {\nid  \nenglishName  \nsprites  {\nnormal  {\nmale  {\nfront  \n}\n\n}\n\n}\n\n}\n\n}\n\n}\n\n}\n\n}\n";
 
 function parse(value) {
   var match = Js_json.decodeObject(value);
@@ -61,53 +61,16 @@ function parse(value) {
                                 var match$4 = Js_json.decodeObject(value$1);
                                 var tmp$2;
                                 if (match$4 !== undefined) {
-                                  var value$2 = Caml_option.valFromOption(match$4);
-                                  var match$5 = Js_dict.get(value$2, "color");
+                                  var match$5 = Js_dict.get(Caml_option.valFromOption(match$4), "pokemons");
                                   var tmp$3;
                                   if (match$5 !== undefined) {
-                                    var value$3 = Caml_option.valFromOption(match$5);
-                                    var match$6 = Js_json.decodeNull(value$3);
+                                    var value$2 = Caml_option.valFromOption(match$5);
+                                    var match$6 = Js_json.decodeNull(value$2);
                                     if (match$6 !== undefined) {
                                       tmp$3 = undefined;
                                     } else {
-                                      var match$7 = Js_json.decodeObject(value$3);
-                                      var tmp$4;
-                                      if (match$7 !== undefined) {
-                                        var match$8 = Js_dict.get(Caml_option.valFromOption(match$7), "identifier");
-                                        var tmp$5;
-                                        if (match$8 !== undefined) {
-                                          var value$4 = Caml_option.valFromOption(match$8);
-                                          var match$9 = Js_json.decodeNull(value$4);
-                                          if (match$9 !== undefined) {
-                                            tmp$5 = undefined;
-                                          } else {
-                                            var match$10 = Js_json.decodeString(value$4);
-                                            tmp$5 = match$10 !== undefined ? match$10 : Js_exn.raiseError("graphql_ppx: Expected string, got " + JSON.stringify(value$4));
-                                          }
-                                        } else {
-                                          tmp$5 = undefined;
-                                        }
-                                        tmp$4 = {
-                                          identifier: tmp$5
-                                        };
-                                      } else {
-                                        tmp$4 = Js_exn.raiseError("graphql_ppx: Object is not a value");
-                                      }
-                                      tmp$3 = Caml_option.some(tmp$4);
-                                    }
-                                  } else {
-                                    tmp$3 = undefined;
-                                  }
-                                  var match$11 = Js_dict.get(value$2, "pokemons");
-                                  var tmp$6;
-                                  if (match$11 !== undefined) {
-                                    var value$5 = Caml_option.valFromOption(match$11);
-                                    var match$12 = Js_json.decodeNull(value$5);
-                                    if (match$12 !== undefined) {
-                                      tmp$6 = undefined;
-                                    } else {
-                                      var match$13 = Js_json.decodeArray(value$5);
-                                      tmp$6 = match$13 !== undefined ? match$13.map((function (value) {
+                                      var match$7 = Js_json.decodeArray(value$2);
+                                      tmp$3 = match$7 !== undefined ? match$7.map((function (value) {
                                                 var match = Js_json.decodeNull(value);
                                                 if (match !== undefined) {
                                                   return undefined;
@@ -177,38 +140,22 @@ function parse(value) {
                                                                     var match$16 = Js_json.decodeObject(value$6);
                                                                     var tmp$8;
                                                                     if (match$16 !== undefined) {
-                                                                      var value$7 = Caml_option.valFromOption(match$16);
-                                                                      var match$17 = Js_dict.get(value$7, "front");
+                                                                      var match$17 = Js_dict.get(Caml_option.valFromOption(match$16), "front");
                                                                       var tmp$9;
                                                                       if (match$17 !== undefined) {
-                                                                        var value$8 = Caml_option.valFromOption(match$17);
-                                                                        var match$18 = Js_json.decodeNull(value$8);
+                                                                        var value$7 = Caml_option.valFromOption(match$17);
+                                                                        var match$18 = Js_json.decodeNull(value$7);
                                                                         if (match$18 !== undefined) {
                                                                           tmp$9 = undefined;
                                                                         } else {
-                                                                          var match$19 = Js_json.decodeString(value$8);
-                                                                          tmp$9 = match$19 !== undefined ? match$19 : Js_exn.raiseError("graphql_ppx: Expected string, got " + JSON.stringify(value$8));
+                                                                          var match$19 = Js_json.decodeString(value$7);
+                                                                          tmp$9 = match$19 !== undefined ? match$19 : Js_exn.raiseError("graphql_ppx: Expected string, got " + JSON.stringify(value$7));
                                                                         }
                                                                       } else {
                                                                         tmp$9 = undefined;
                                                                       }
-                                                                      var match$20 = Js_dict.get(value$7, "back");
-                                                                      var tmp$10;
-                                                                      if (match$20 !== undefined) {
-                                                                        var value$9 = Caml_option.valFromOption(match$20);
-                                                                        var match$21 = Js_json.decodeNull(value$9);
-                                                                        if (match$21 !== undefined) {
-                                                                          tmp$10 = undefined;
-                                                                        } else {
-                                                                          var match$22 = Js_json.decodeString(value$9);
-                                                                          tmp$10 = match$22 !== undefined ? match$22 : Js_exn.raiseError("graphql_ppx: Expected string, got " + JSON.stringify(value$9));
-                                                                        }
-                                                                      } else {
-                                                                        tmp$10 = undefined;
-                                                                      }
                                                                       tmp$8 = {
-                                                                        front: tmp$9,
-                                                                        back: tmp$10
+                                                                        front: tmp$9
                                                                       };
                                                                     } else {
                                                                       tmp$8 = Js_exn.raiseError("graphql_ppx: Object is not a value");
@@ -250,143 +197,13 @@ function parse(value) {
                                                   }
                                                   return Caml_option.some(tmp);
                                                 }
-                                              })) : Js_exn.raiseError("graphql_ppx: Expected array, got " + JSON.stringify(value$5));
+                                              })) : Js_exn.raiseError("graphql_ppx: Expected array, got " + JSON.stringify(value$2));
                                     }
                                   } else {
-                                    tmp$6 = undefined;
-                                  }
-                                  var match$14 = Js_dict.get(value$2, "evolutionChain");
-                                  var tmp$7;
-                                  if (match$14 !== undefined) {
-                                    var value$6 = Caml_option.valFromOption(match$14);
-                                    var match$15 = Js_json.decodeNull(value$6);
-                                    if (match$15 !== undefined) {
-                                      tmp$7 = undefined;
-                                    } else {
-                                      var match$16 = Js_json.decodeObject(value$6);
-                                      var tmp$8;
-                                      if (match$16 !== undefined) {
-                                        var match$17 = Js_dict.get(Caml_option.valFromOption(match$16), "pokemonSpecies");
-                                        var tmp$9;
-                                        if (match$17 !== undefined) {
-                                          var value$7 = Caml_option.valFromOption(match$17);
-                                          var match$18 = Js_json.decodeNull(value$7);
-                                          if (match$18 !== undefined) {
-                                            tmp$9 = undefined;
-                                          } else {
-                                            var match$19 = Js_json.decodeArray(value$7);
-                                            tmp$9 = match$19 !== undefined ? match$19.map((function (value) {
-                                                      var match = Js_json.decodeNull(value);
-                                                      if (match !== undefined) {
-                                                        return undefined;
-                                                      } else {
-                                                        var match$1 = Js_json.decodeObject(value);
-                                                        var tmp;
-                                                        if (match$1 !== undefined) {
-                                                          var value$1 = Caml_option.valFromOption(match$1);
-                                                          var match$2 = Js_dict.get(value$1, "id");
-                                                          var tmp$1;
-                                                          if (match$2 !== undefined) {
-                                                            var value$2 = Caml_option.valFromOption(match$2);
-                                                            var match$3 = Js_json.decodeNull(value$2);
-                                                            if (match$3 !== undefined) {
-                                                              tmp$1 = undefined;
-                                                            } else {
-                                                              var match$4 = Js_json.decodeString(value$2);
-                                                              tmp$1 = match$4 !== undefined ? match$4 : Js_exn.raiseError("graphql_ppx: Expected string, got " + JSON.stringify(value$2));
-                                                            }
-                                                          } else {
-                                                            tmp$1 = undefined;
-                                                          }
-                                                          var match$5 = Js_dict.get(value$1, "pokemons");
-                                                          var tmp$2;
-                                                          if (match$5 !== undefined) {
-                                                            var value$3 = Caml_option.valFromOption(match$5);
-                                                            var match$6 = Js_json.decodeNull(value$3);
-                                                            if (match$6 !== undefined) {
-                                                              tmp$2 = undefined;
-                                                            } else {
-                                                              var match$7 = Js_json.decodeArray(value$3);
-                                                              tmp$2 = match$7 !== undefined ? match$7.map((function (value) {
-                                                                        var match = Js_json.decodeNull(value);
-                                                                        if (match !== undefined) {
-                                                                          return undefined;
-                                                                        } else {
-                                                                          var match$1 = Js_json.decodeObject(value);
-                                                                          var tmp;
-                                                                          if (match$1 !== undefined) {
-                                                                            var value$1 = Caml_option.valFromOption(match$1);
-                                                                            var match$2 = Js_dict.get(value$1, "id");
-                                                                            var tmp$1;
-                                                                            if (match$2 !== undefined) {
-                                                                              var value$2 = Caml_option.valFromOption(match$2);
-                                                                              var match$3 = Js_json.decodeNull(value$2);
-                                                                              if (match$3 !== undefined) {
-                                                                                tmp$1 = undefined;
-                                                                              } else {
-                                                                                var match$4 = Js_json.decodeString(value$2);
-                                                                                tmp$1 = match$4 !== undefined ? match$4 : Js_exn.raiseError("graphql_ppx: Expected string, got " + JSON.stringify(value$2));
-                                                                              }
-                                                                            } else {
-                                                                              tmp$1 = undefined;
-                                                                            }
-                                                                            var match$5 = Js_dict.get(value$1, "englishName");
-                                                                            var tmp$2;
-                                                                            if (match$5 !== undefined) {
-                                                                              var value$3 = Caml_option.valFromOption(match$5);
-                                                                              var match$6 = Js_json.decodeNull(value$3);
-                                                                              if (match$6 !== undefined) {
-                                                                                tmp$2 = undefined;
-                                                                              } else {
-                                                                                var match$7 = Js_json.decodeString(value$3);
-                                                                                tmp$2 = match$7 !== undefined ? match$7 : Js_exn.raiseError("graphql_ppx: Expected string, got " + JSON.stringify(value$3));
-                                                                              }
-                                                                            } else {
-                                                                              tmp$2 = undefined;
-                                                                            }
-                                                                            tmp = {
-                                                                              id: tmp$1,
-                                                                              englishName: tmp$2
-                                                                            };
-                                                                          } else {
-                                                                            tmp = Js_exn.raiseError("graphql_ppx: Object is not a value");
-                                                                          }
-                                                                          return Caml_option.some(tmp);
-                                                                        }
-                                                                      })) : Js_exn.raiseError("graphql_ppx: Expected array, got " + JSON.stringify(value$3));
-                                                            }
-                                                          } else {
-                                                            tmp$2 = undefined;
-                                                          }
-                                                          tmp = {
-                                                            id: tmp$1,
-                                                            pokemons: tmp$2
-                                                          };
-                                                        } else {
-                                                          tmp = Js_exn.raiseError("graphql_ppx: Object is not a value");
-                                                        }
-                                                        return Caml_option.some(tmp);
-                                                      }
-                                                    })) : Js_exn.raiseError("graphql_ppx: Expected array, got " + JSON.stringify(value$7));
-                                          }
-                                        } else {
-                                          tmp$9 = undefined;
-                                        }
-                                        tmp$8 = {
-                                          pokemonSpecies: tmp$9
-                                        };
-                                      } else {
-                                        tmp$8 = Js_exn.raiseError("graphql_ppx: Object is not a value");
-                                      }
-                                      tmp$7 = Caml_option.some(tmp$8);
-                                    }
-                                  } else {
-                                    tmp$7 = undefined;
+                                    tmp$3 = undefined;
                                   }
                                   tmp$2 = {
-                                    color: tmp$3,
-                                    pokemons: tmp$6,
-                                    evolutionChain: tmp$7
+                                    pokemons: tmp$3
                                   };
                                 } else {
                                   tmp$2 = Js_exn.raiseError("graphql_ppx: Object is not a value");
