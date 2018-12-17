@@ -16,7 +16,7 @@ var ReasonReact = require("reason-react/src/ReasonReact.js");
 var Api$ReasonDojoPokedex = require("./Api.bs.js");
 var Link$ReasonDojoPokedex = require("./Link.bs.js");
 
-var ppx_printed_query = "query getPokemons($first: Int, $after: String, $search: String)  {\npokemon: Pokemon(first: $first, after: $after, filter: {identifierLike: $search})  {\ntotalCount  \npageInfo  {\nendCursor  \n}\n\nedges  {\nnode  {\nid  \nenglishName  \nidentifier  \n}\n\n}\n\n}\n\n}\n";
+var ppx_printed_query = "query getPokemons($first: Int, $after: String, $search: String)  {\npokemon: Pokemon(first: $first, after: $after, filter: {identifierLike: $search})  {\ntotalCount  \npageInfo  {\nendCursor  \n}\n\nedges  {\nnode  {\nid  \nenglishName  \nidentifier  \nsprites  {\nnormal  {\nmale  {\nfront  \n}\n\n}\n\n}\n\n}\n\n}\n\n}\n\n}\n";
 
 function parse(value) {
   var match = Js_json.decodeObject(value);
@@ -146,10 +146,91 @@ function parse(value) {
                                   } else {
                                     tmp$5 = undefined;
                                   }
+                                  var match$14 = Js_dict.get(value$2, "sprites");
+                                  var tmp$6;
+                                  if (match$14 !== undefined) {
+                                    var value$6 = Caml_option.valFromOption(match$14);
+                                    var match$15 = Js_json.decodeNull(value$6);
+                                    if (match$15 !== undefined) {
+                                      tmp$6 = undefined;
+                                    } else {
+                                      var match$16 = Js_json.decodeObject(value$6);
+                                      var tmp$7;
+                                      if (match$16 !== undefined) {
+                                        var match$17 = Js_dict.get(Caml_option.valFromOption(match$16), "normal");
+                                        var tmp$8;
+                                        if (match$17 !== undefined) {
+                                          var value$7 = Caml_option.valFromOption(match$17);
+                                          var match$18 = Js_json.decodeNull(value$7);
+                                          if (match$18 !== undefined) {
+                                            tmp$8 = undefined;
+                                          } else {
+                                            var match$19 = Js_json.decodeObject(value$7);
+                                            var tmp$9;
+                                            if (match$19 !== undefined) {
+                                              var match$20 = Js_dict.get(Caml_option.valFromOption(match$19), "male");
+                                              var tmp$10;
+                                              if (match$20 !== undefined) {
+                                                var value$8 = Caml_option.valFromOption(match$20);
+                                                var match$21 = Js_json.decodeNull(value$8);
+                                                if (match$21 !== undefined) {
+                                                  tmp$10 = undefined;
+                                                } else {
+                                                  var match$22 = Js_json.decodeObject(value$8);
+                                                  var tmp$11;
+                                                  if (match$22 !== undefined) {
+                                                    var match$23 = Js_dict.get(Caml_option.valFromOption(match$22), "front");
+                                                    var tmp$12;
+                                                    if (match$23 !== undefined) {
+                                                      var value$9 = Caml_option.valFromOption(match$23);
+                                                      var match$24 = Js_json.decodeNull(value$9);
+                                                      if (match$24 !== undefined) {
+                                                        tmp$12 = undefined;
+                                                      } else {
+                                                        var match$25 = Js_json.decodeString(value$9);
+                                                        tmp$12 = match$25 !== undefined ? match$25 : Js_exn.raiseError("graphql_ppx: Expected string, got " + JSON.stringify(value$9));
+                                                      }
+                                                    } else {
+                                                      tmp$12 = undefined;
+                                                    }
+                                                    tmp$11 = {
+                                                      front: tmp$12
+                                                    };
+                                                  } else {
+                                                    tmp$11 = Js_exn.raiseError("graphql_ppx: Object is not a value");
+                                                  }
+                                                  tmp$10 = Caml_option.some(tmp$11);
+                                                }
+                                              } else {
+                                                tmp$10 = undefined;
+                                              }
+                                              tmp$9 = {
+                                                male: tmp$10
+                                              };
+                                            } else {
+                                              tmp$9 = Js_exn.raiseError("graphql_ppx: Object is not a value");
+                                            }
+                                            tmp$8 = Caml_option.some(tmp$9);
+                                          }
+                                        } else {
+                                          tmp$8 = undefined;
+                                        }
+                                        tmp$7 = {
+                                          normal: tmp$8
+                                        };
+                                      } else {
+                                        tmp$7 = Js_exn.raiseError("graphql_ppx: Object is not a value");
+                                      }
+                                      tmp$6 = Caml_option.some(tmp$7);
+                                    }
+                                  } else {
+                                    tmp$6 = undefined;
+                                  }
                                   tmp$2 = {
                                     id: tmp$3,
                                     englishName: tmp$4,
-                                    identifier: tmp$5
+                                    identifier: tmp$5,
+                                    sprites: tmp$6
                                   };
                                 } else {
                                   tmp$2 = Js_exn.raiseError("graphql_ppx: Object is not a value");
@@ -266,18 +347,21 @@ function decode(response) {
   var edges = match$3 !== undefined ? Caml_option.valFromOption(match$3).edges : undefined;
   var pokemons = edges !== undefined ? Belt_List.map(Belt_List.keep(Belt_List.fromArray(Belt_Array.map(edges, (function (edge) {
                         var match = edge !== undefined ? Caml_option.valFromOption(edge).node : undefined;
-                        var identifier = match !== undefined ? Caml_option.valFromOption(match).identifier : undefined;
+                        var id = match !== undefined ? Caml_option.valFromOption(match).id : undefined;
                         var match$1 = edge !== undefined ? Caml_option.valFromOption(edge).node : undefined;
-                        var id = match$1 !== undefined ? Caml_option.valFromOption(match$1).id : undefined;
+                        var englishName = match$1 !== undefined ? Caml_option.valFromOption(match$1).englishName : undefined;
                         var match$2 = edge !== undefined ? Caml_option.valFromOption(edge).node : undefined;
-                        var englishName = match$2 !== undefined ? Caml_option.valFromOption(match$2).englishName : undefined;
-                        return Belt_Option.flatMap(identifier, (function (identifier) {
-                                      return Belt_Option.flatMap(id, (function (id) {
-                                                    return Belt_Option.flatMap(englishName, (function (englishName) {
+                        var match$3 = match$2 !== undefined ? Caml_option.valFromOption(match$2).sprites : undefined;
+                        var match$4 = match$3 !== undefined ? Caml_option.valFromOption(match$3).normal : undefined;
+                        var match$5 = match$4 !== undefined ? Caml_option.valFromOption(match$4).male : undefined;
+                        var sprite = match$5 !== undefined ? Caml_option.valFromOption(match$5).front : undefined;
+                        return Belt_Option.flatMap(id, (function (id) {
+                                      return Belt_Option.flatMap(englishName, (function (englishName) {
+                                                    return Belt_Option.flatMap(sprite, (function (sprite) {
                                                                   return /* record */[
-                                                                          /* identifier */identifier,
                                                                           /* id */Caml_format.caml_int_of_string(id),
-                                                                          /* englishName */englishName
+                                                                          /* englishName */englishName,
+                                                                          /* sprite */sprite
                                                                         ];
                                                                 }));
                                                   }));
@@ -358,8 +442,10 @@ function make$1(_children) {
                 var data = match[0];
                 var pokemons = Belt_List.toArray(Belt_List.map(data[/* pokemons */2], (function (pokemon) {
                             return React.createElement("div", {
-                                        key: String(pokemon[/* id */1])
-                                      }, ReasonReact.element(undefined, undefined, Link$ReasonDojoPokedex.make("/" + String(pokemon[/* id */1]), pokemon[/* englishName */2])));
+                                        key: String(pokemon[/* id */0])
+                                      }, ReasonReact.element(undefined, undefined, Link$ReasonDojoPokedex.make("/" + String(pokemon[/* id */0]), React.createElement("div", undefined, React.createElement("img", {
+                                                        src: pokemon[/* sprite */2]
+                                                      }), pokemon[/* englishName */1]))));
                           })));
                 return React.createElement("div", undefined, React.createElement("div", undefined, pokemons), React.createElement("button", {
                                 onClick: (function (param) {

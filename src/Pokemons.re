@@ -13,6 +13,13 @@ query getPokemons($first: Int, $after: String, $search: String) {
         id
         englishName
         identifier
+        sprites {
+          normal {
+            male {
+              front
+            }
+          }
+        }
       }
     }
   }
@@ -21,9 +28,9 @@ query getPokemons($first: Int, $after: String, $search: String) {
 ];
 
 type pokemon = {
-  identifier: string,
   id: int,
   englishName: string,
+  sprite: string,
 };
 
 type data = {
@@ -52,13 +59,13 @@ let decode = response => {
     | Some(edges) =>
       edges
       ->Array.map(edge => {
-          let identifier = [%get_in edge#??node#??identifier];
           let id = [%get_in edge#??node#??id];
           let englishName = [%get_in edge#??node#??englishName];
-          identifier->Option.flatMap(identifier =>
-            id->Option.flatMap(id =>
-              englishName->Option.flatMap(englishName =>
-                Some({identifier, id: int_of_string(id), englishName})
+          let sprite = [%get_in edge#??node#??sprites#??normal#??male#??front];
+          id->Option.flatMap(id =>
+            englishName->Option.flatMap(englishName =>
+              sprite->Option.flatMap(sprite =>
+                Some({id: int_of_string(id), englishName, sprite})
               )
             )
           );
@@ -145,7 +152,10 @@ let make = _children => {
         ->List.map(pokemon =>
             <div key={string_of_int(pokemon.id)}>
               <Link to_={"/" ++ string_of_int(pokemon.id)}>
-                ...{ReasonReact.string(pokemon.englishName)}
+                ...<div>
+                     <img src={pokemon.sprite} />
+                     {ReasonReact.string(pokemon.englishName)}
+                   </div>
               </Link>
             </div>
           )
